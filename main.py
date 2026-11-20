@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""Entry point for news-image-20261120 (Python 3.13, standard library only).
+"""news-image-20261120 entrypoint: copy entry.png to the output dir.
 
-The front page is drawn at build time by render.py and shipped in this
-repository as entry.png. This program only copies that image to the output
-directory, so both graded runs write byte-identical output.
+Standard library only. Deterministic: writes the same bytes every run.
 """
-
 import os
 import shutil
 import sys
@@ -13,11 +10,14 @@ import sys
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    source = os.path.join(here, "entry.png")
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    src = os.path.join(here, "entry.png")
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
     os.makedirs(out_dir, exist_ok=True)
-    shutil.copyfile(source, os.path.join(out_dir, "entry.png"))
+    dst = os.path.join(out_dir, "entry.png")
+    shutil.copyfile(src, dst)
+    print("wrote %s %d bytes" % (dst, os.path.getsize(dst)))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
